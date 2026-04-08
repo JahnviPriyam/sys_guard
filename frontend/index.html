@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CloudGuard | Systems Monitor</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Intense CSE Project fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Background Elements -->
+    <div class="grid-overlay"></div>
+    <div class="cyber-vignette"></div>
+
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar slide-in-left">
+            <div class="brand">
+                <div class="brand-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                </div>
+                <h2>SYS_GUARD</h2>
+            </div>
+            
+            <nav class="nav-menu">
+                <a href="#" class="nav-item active"><span class="bracket">[</span>OVERVIEW<span class="bracket">]</span></a>
+                <a href="#anomalies" class="nav-item"><span class="bracket">[</span>ANOMALIES<span class="bracket">]</span></a>
+                <a href="#topology" class="nav-item"><span class="bracket">[</span>TOPOLOGY<span class="bracket">]</span></a>
+            </nav>
+
+            <div class="action-panel">
+                <div class="status-indicator">
+                    <div class="led-blink"></div>
+                    <span class="text-mono sys-status">MONITOR_ACTIVE</span>
+                </div>
+                <button id="syncBtn" class="cyber-btn">
+                    <span class="btn-text">INIT_SYNC()</span>
+                    <span class="btn-glitch"></span>
+                </button>
+                <p id="syncStatus" class="text-mono status-text">Awaiting input...</p>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="dashboard fade-in">
+            <header class="top-header">
+                <div class="header-main text-typewriter" data-text="aws_telemetry_pipeline // live">
+                    aws_telemetry_pipeline // live
+                </div>
+                <div class="header-metrics">
+                    <div class="metric"><span class="metric-lbl">UPTIME:</span> <span id="sysUptime" class="text-mono">00:00:00</span></div>
+                    <div class="metric"><span class="metric-lbl">CONN:</span> <span class="text-mono SECURE">SECURE_TLS</span></div>
+                </div>
+            </header>
+
+            <!-- Top Core Metrics -->
+            <section class="kpi-grid">
+                <div class="card kpi-card highlight-glow">
+                    <h3 class="card-title text-mono">/est_recovery</h3>
+                    <div class="kpi-main text-shadow-primary">
+                        <span class="kpi-symbol">$</span><span id="estimatedSavings" class="counter">0.00</span>
+                    </div>
+                    <div class="sparkline-container"></div>
+                </div>
+
+                <div class="card kpi-card">
+                    <h3 class="card-title text-mono">/alerts_detected</h3>
+                    <div class="kpi-main text-shadow-warn" id="wasteCount">0</div>
+                    <p class="kpi-sub">Inefficient resource allocations</p>
+                </div>
+
+                <div class="card kpi-card">
+                    <h3 class="card-title text-mono">/active_nodes</h3>
+                    <div class="kpi-main" id="totalResources">0</div>
+                    <p class="kpi-sub">Found: <span id="totalEc2" class="text-mono">0</span> EC2, <span id="totalS3" class="text-mono">0</span> S3</p>
+                </div>
+            </section>
+
+            <!-- Dense Data Section -->
+            <section class="complex-grid">
+                <!-- System Health (Simulated) -->
+                <div class="card health-card">
+                    <h3 class="card-title text-mono">/sys_health_matrix</h3>
+                    <div class="health-bars">
+                        <div class="health-row">
+                            <span class="text-mono">API_LATENCY</span>
+                            <div class="bar-container"><div class="bar-fill" id="barPing" style="width: 15%;"></div></div>
+                            <span class="text-mono text-right" id="valPing">24ms</span>
+                        </div>
+                        <div class="health-row">
+                            <span class="text-mono">MEM_BUFFER</span>
+                            <div class="bar-container"><div class="bar-fill" id="barMem" style="width: 42%;"></div></div>
+                            <span class="text-mono text-right" id="valMem">42%</span>
+                        </div>
+                        <div class="health-row">
+                            <span class="text-mono">DB_IO_LOAD</span>
+                            <div class="bar-container"><div class="bar-fill warn" id="barIo" style="width: 78%;"></div></div>
+                            <span class="text-mono text-right" id="valIo">78%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts (Real) -->
+                <div class="card chart-card ec2-chart-card">
+                    <h3 class="card-title text-mono">/compute_stress // EC2</h3>
+                    <div class="chart-wrapper">
+                        <canvas id="ec2Chart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Real-time Event Log (Simulated) -->
+                <div class="card terminal-card" id="topology">
+                    <h3 class="card-title text-mono">/event_stream</h3>
+                    <div class="terminal-window" id="eventStream">
+                        <!-- JS injected logs -->
+                    </div>
+                </div>
+
+                <!-- Storage Chart (Real) -->
+                <div class="card chart-card s3-chart-card">
+                    <h3 class="card-title text-mono">/storage_allocation // S3</h3>
+                    <div class="chart-wrapper">
+                        <canvas id="s3Chart"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Anomalies Table (Real) -->
+            <section id="anomalies" class="card full-width-card mt-3">
+                <div class="table-header">
+                    <h3 class="card-title text-mono">/optimization_directives</h3>
+                    <select id="severityFilter" class="cs-select text-mono">
+                        <option value="All">FILTER: ALL</option>
+                        <option value="Critical">FILTER: CRITICAL</option>
+                        <option value="High">FILTER: HIGH</option>
+                    </select>
+                </div>
+                
+                <div class="table-wrapper">
+                    <table id="recommendationsTable" class="cs-table">
+                        <thead>
+                            <tr>
+                                <th>NODE_ID</th>
+                                <th>CLASS</th>
+                                <th>DIAGNOSTIC_ERR</th>
+                                <th>PROCEDURE</th>
+                                <th>THREAT_LVL</th>
+                                <th class="text-right">RECOVERY_VAL</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- JS Injection -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
