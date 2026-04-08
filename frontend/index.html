@@ -59,18 +59,20 @@
 
             <!-- Top Core Metrics -->
             <section class="kpi-grid">
+                <div class="card kpi-card">
+                    <h3 class="card-title text-mono">/total_running_cost</h3>
+                    <div class="kpi-main text-shadow-warn">
+                        <span class="kpi-symbol">$</span><span id="totalCost" class="counter">0.00</span>
+                    </div>
+                    <p class="kpi-sub" style="color:var(--accent-amber)">Estimated monthly burn rate</p>
+                </div>
+
                 <div class="card kpi-card highlight-glow">
-                    <h3 class="card-title text-mono">/est_recovery</h3>
+                    <h3 class="card-title text-mono">/potential_recovery</h3>
                     <div class="kpi-main text-shadow-primary">
                         <span class="kpi-symbol">$</span><span id="estimatedSavings" class="counter">0.00</span>
                     </div>
-                    <div class="sparkline-container"></div>
-                </div>
-
-                <div class="card kpi-card">
-                    <h3 class="card-title text-mono">/alerts_detected</h3>
-                    <div class="kpi-main text-shadow-warn" id="wasteCount">0</div>
-                    <p class="kpi-sub">Inefficient resource allocations</p>
+                    <p id="wasteCountStr" class="kpi-sub text-mono">Analyzing allocations...</p>
                 </div>
 
                 <div class="card kpi-card">
@@ -79,6 +81,14 @@
                     <p class="kpi-sub">Found: <span id="totalEc2" class="text-mono">0</span> EC2, <span id="totalS3" class="text-mono">0</span> S3</p>
                 </div>
             </section>
+
+            <!-- Top Recommendation Banner -->
+            <div class="card highlight-glow mb-4" id="topRecBanner" style="display:none; align-items:center; justify-content:space-between;">
+                <div>
+                    <h3 class="card-title text-mono">/top_directive</h3>
+                    <div class="text-mono" id="topRecText" style="font-size: 1.1rem; color: var(--text-main);"></div>
+                </div>
+            </div>
 
             <!-- Dense Data Section -->
             <section class="complex-grid">
@@ -150,6 +160,7 @@
                                 <th>PROCEDURE</th>
                                 <th>THREAT_LVL</th>
                                 <th class="text-right">RECOVERY_VAL</th>
+                                <th class="text-right">ACTION</th>
                             </tr>
                         </thead>
                         <tbody>

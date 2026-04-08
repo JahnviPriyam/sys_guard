@@ -1,55 +1,54 @@
-# SYS_GUARD (CloudGuard) // AWS Telemetry & FinOps Pipeline
+# SYS_GUARD (CloudGuard) // AWS Telemetry & FinOps Engine
 
+![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![Python](https://img.shields.io/badge/python-3.10-blue)
 ![FastAPI](https://img.shields.io/badge/fastapi-0.115-green)
 ![Docker](https://img.shields.io/badge/docker-compose-blue)
 
-**SYS_GUARD (CloudGuard)** is an intense, high-performance Cloud Financial Operations (FinOps) monitoring dashboard. It combines a highly unique, terminal-inspired dark-mode interface with a robust Python/FastAPI backend to scan live AWS cloud environments, assess architectural loads, and identify cloud resource waste.
+**SYS_GUARD** is a high-performance Cloud Financial Operations (FinOps) engineering tool. It solves a critical problem in modern cloud architecture: **Resource Sprawl and Waste**. By actively auditing live AWS infrastructure, compiling telemetry, and applying real-time cost analysis algorithms, it provides actionable directives to recover lost capital.
 
-## 🚀 Features
-- **Live AWS Telemetry:** Connects directly to AWS via `boto3` to scan EC2 instances and S3 Buckets recursively.
-- **Anomaly & Waste Detection:** Analyzes metric patterns to flag underutilized infrastructure (Idle EC2s, Empty S3 Buckets) and calculates potential monthly cost recovery allocations.
-- **Intense CSE Interface:** Features a custom-built, hardware-terminal style dashboard with typing load scripts, simulated real-time event logs, and dynamic grid layouts.
-- **Containerized Architecture:** Fully dockerized stack containing a custom API and a dedicated MySQL server.
+## ⚠️ The FinOps Problem
+Companies deploy thousands of cloud components across AWS. Over time, instances are left running idle, and storage buckets are abandoned, leading to thousands of dollars in continuous "cloud burn rate."
+
+**SYS_GUARD** connects directly to an AWS environment, computes the exact cost of each instance dynamically (`cost = uptime_hours * hourly_tier_rate`), and identifies underutilized resources to calculate an immediate ROI on cleanup.
+
+## 🚀 Key Features
+- **Cost Engine Automation:** Maps live AWS EC2 types to hardcoded hourly pricing dictionaries to calculate exact monthly burn rate and potential recovery values.
+- **Top Directive Routing:** An algorithmic sort locates the absolute highest-value remediation action and highlights it directly to the operator.
+- **One-Click Remediation (`[EXECUTE]`):** A dedicated endpoint that simulates automating the termination of wasteful resources, purging the database and instantly adjusting the UI math.
+- **Intense CSE Interface:** A custom-built, hardware-terminal style dashboard with typing load scripts, simulated real-time event logs, and dynamic grid layouts.
 
 ## 🧠 System Architecture
 
 ```text
-[ AWS Cloud ]
+[ Live AWS Cloud ]
+      |
       | (boto3 / REST API)
       v
-+-------------------------------+
-|         FastAPI Backend       | 
-|  (Data Aggregation Engine)    | 
-|                               |
-|  [ aws_collector.py ]         |
-|  [ models.py / schemas.py ]   |
-+-------------------------------+
-      |                 ^
-   (SQLAlchemy)         | (JSON REST Responses)
-      v                 |
-[ MySQL 8.0 ]    [ HTML/JS Client ]
- (Dockerized)     (Intense Dashboard UI)
++-----------------------------------+
+|         FastAPI Backend           | 
+|                                   | 
+| [ aws_collector.py (Data Sync) ]  |
+| [ main.py (Cost Math Engine)   ]  |
++-----------------------------------+
+      |                      ^
+   (SQLAlchemy)              | (JSON REST Responses)
+      v                      |
+[ MySQL 8.0 ]         [ HTML/JS Client ]
+ (Dockerized)         (Dynamic FinOps UI)
 ```
-
-## 🛠 Tech Stack
-- **Frontend:** Vanilla HTML5, CSS3 (*Custom `Rajdhani` & `JetBrains Mono` Typography*), JavaScript (ES6), Chart.js
-- **Backend:** Python 3.10, FastAPI, Uvicorn, SQLAlchemy
-- **Database:** MySQL 8.0, PyMySQL
-- **Cloud Provider:** Amazon Web Services (AWS SDK / Boto3)
-- **Deployment:** Docker & Docker Compose
 
 ## ⚡ Deployment & Setup
 
 ### Prerequisites
-- Docker and Docker Compose installed
+- Docker and Docker Compose
 - AWS IAM Access Keys with `AmazonEC2ReadOnlyAccess` and `AmazonS3ReadOnlyAccess`
 
 ### Initialization Protocol
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/yourusername/sys_guard.git
+   git clone https://github.com/JahnviPriyam/sys_guard.git
    cd sys_guard
    ```
 
@@ -66,8 +65,8 @@
    docker-compose up --build -d
    ```
 
-4. **Access the Terminal:**
-   Navigate to `http://localhost:8000` in your browser. Click `INIT_SYNC()` on the left sidebar to dispatch the data pipeline task and populate the charts with live metrics.
+4. **Operate Terminal:**
+   Navigate to `http://localhost:8000`. Click `INIT_SYNC()` to dispatch the data pipeline. Review the `Top Directive`, or click `[EXECUTE]` on any detected waste anomaly to simulate automated infrastructure remediation.
 
 ---
-> *Built as a Computer Science Engineering project focusing on Cloud Architecture, FinOps, and interactive web visualization.*
+> *Architected as a robust Computer Science Engineering project focusing on Cloud Infrastructure, FinOps Algorithms, and Full-Stack Visualization.*

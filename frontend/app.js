@@ -119,8 +119,17 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('totalEc2').textContent = data.total_ec2;
         document.getElementById('totalS3').textContent = data.total_s3;
         
-        animateCounter('wasteCount', data.waste_count);
+        if(document.getElementById('totalCost')) animateCounter('totalCost', data.total_cost_monthly, true);
+        if(document.getElementById('wasteCountStr')) document.getElementById('wasteCountStr').textContent = `Tracking ${data.waste_count} inefficiencies`;
+        
         animateCounter('estimatedSavings', parseFloat(data.estimated_savings_monthly), true);
+
+        if (data.top_recommendation) {
+            document.getElementById('topRecBanner').style.display = 'flex';
+            document.getElementById('topRecText').textContent = data.top_recommendation;
+        } else {
+            document.getElementById('topRecBanner').style.display = 'none';
+        }
     }
 
     async function loadEC2Data() {
@@ -203,7 +212,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let filtered = filterObj !== 'All' ? allRecommendations.filter(r => r.severity === filterObj) : allRecommendations;
 
         if (filtered.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding: 2rem;">[SYS_OK] No directives required.</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding: 2rem;">[SYS_OK] No directives required.</td></tr>';
             return;
         }
 
@@ -220,8 +229,35 @@ document.addEventListener('DOMContentLoaded', () => {
                 <td style="color: var(--text-main);">${rec.recommendation}</td>
                 <td><span class="badge ${rec.severity.toLowerCase()}">${rec.severity}</span></td>
                 <td class="text-right" style="color:var(--accent-emerald);">+$${parseFloat(rec.estimated_savings_monthly).toFixed(2)}</td>
+                <td class="text-right"><button class="cyber-btn exec-btn" data-id="${rec.resource_id}" data-type="${rec.resource_type}" style="padding: 0.2rem 0.5rem; font-size:0.7rem;">[EXECUTE]</button></td>
             `;
             tbody.appendChild(tr);
+        });
+
+        document.querySelectorAll('.exec-btn').forEach(btn => {
+            btn.addEventListener('click', async (e) => {
+                const rID = e.target.getAttribute('data-id');
+                const rType = e.target.getAttribute('data-type');
+                e.target.disabled = true;
+                e.target.textContent = '[WAIT]';
+                logTerminalEvent('SYS', `Dispatching STOP signal to node ${rID}...`);
+                
+                try {
+                    const res = await fetch('/api/action/simulate', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ resource_id: rID, resource_type: rType })
+                    });
+                    if (res.ok) {
+                        e.target.textContent = '[OK]';
+                        e.target.style.color = 'var(--accent-emerald)';
+                        logTerminalEvent('OK', `Terminated mapping for ${rID}. State updated.`);
+                        setTimeout(() => fetchDashboardData(), 1200);
+                    }
+                } catch(error) {
+                    logTerminalEvent('ERR', `Action failed for ${rID}`);
+                }
+            });
         });
     }
 

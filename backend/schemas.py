@@ -35,4 +35,10 @@ class SummaryResponse(BaseModel):
     total_ec2: int
     total_s3: int
     waste_count: int
+    total_cost_monthly: float
     estimated_savings_monthly: float
+    top_recommendation: Optional[str] = None
+
+class ActionSimulateRequest(BaseModel):
+    resource_id: str
+    resource_type: str
