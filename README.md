@@ -172,20 +172,12 @@ INIT_SYNC()
 
 ---
 
-## 📌 Why This is FinOps
-
 This system closes the loop:
 
 > **Usage → Cost → Optimization → Impact**
 
 It doesn’t just monitor infrastructure —
 it **quantifies financial waste and drives cost recovery decisions**.
-
----
-
-## 📸 Screenshots
-
-(Add your UI images here)
 
 ---
 
